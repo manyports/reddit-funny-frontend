@@ -20,7 +20,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('https://reddit-funny-backend.onrender.com/start-cron', {
+        const response = await fetch('http://localhost:8080/start-cron', {
           method: 'GET',
           credentials: 'include'
         });

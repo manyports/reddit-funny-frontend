@@ -1,5 +1,5 @@
 export const connectWebSocket = (onMessage: (message: any) => void) => {
-    const socket = new WebSocket('ws://reddit-funny-backend.onrender.com/start-cron');
+    const socket = new WebSocket('ws://localhost:8080');
   
     socket.onopen = () => {
       console.log('WebSocket connection established');
