@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { connectWebSocket } from '../utils/websocket';
 
 interface Post {
   id: string;
@@ -19,7 +20,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:8080/start-cron', {
+        const response = await fetch('https://reddit-funny-backend.onrender.com/start-cron', {
           method: 'GET',
           credentials: 'include'
         });
@@ -41,6 +42,16 @@ export default function Home() {
     };
 
     fetchPosts();
+
+    const socket = connectWebSocket((message) => {
+      if (message.type === 'NEW_POSTS') {
+        setPosts(message.data);
+      }
+    });
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   if (loading) {
@@ -67,7 +78,7 @@ export default function Home() {
           <a key={post.id} href={post.url} className="p-6 border rounded-lg shadow hover:shadow-lg transition duration-200 flex flex-col items-center h-[50%] w-[90%] mb-6 md:h-[50%] md:w-[50%]">
             <h2 className="text-xl font-semibold text-center">{post.title}</h2>
             <p className='font-extrabold mb-4'>by : <span className='text-[#FF4500]'>{post.author}</span></p>
-            <img src={post.url} className="  border rounded" />
+            <img src={post.url} className="border rounded" alt={post.title} />
             <p className='font-semibold mt-4'>Upvoted by : <span className='font-extrabold text-[#FF4500]'>{post.upvotes}</span> people</p>
           </a>
         ))}
